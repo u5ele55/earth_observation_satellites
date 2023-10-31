@@ -1,6 +1,19 @@
 # Prerequisites
 *.d
 
+# Custom
+out.txt
+/.vscode
+*/__pycache__/
+
+# CMake generated files
+build/
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+
 # Compiled Object files
 *.slo
 *.lo
