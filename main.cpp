@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 
 #include "utils/Vector.hpp"
 #include "utils/constants.hpp"
@@ -6,23 +8,26 @@
 #include "utils/coordinates.hpp"
 
 #include "satellite_motion/modeling/RK4Solver.hpp"
-#include "satellite_motion/system/SpacecraftECI.hpp"
+#include "satellite_motion/system/SatelliteECI.hpp"
+#include "satellite_motion/system/SatelliteECEF.hpp"
 
 int main() {
     const double JD = 2460206.383;
     const double unixTimestamp = (JD - 2440587.5) * Constants::Common::SECONDS_IN_DAY;
-
-    Vector initialPosition = {6871257.864, 0.0, 0.0};
-    Vector initialSpeed = {0.0, 3810.1125727278977, 6599.308558521686};
+    //ecef - 7144843.808, 217687.110, -506463.296        562.650611, -1616.516697, 7358.157263
+    Vector initialPosition = {2937656.611, 14432705.729, -20838713.022};
+    Vector initialSpeed = {-1356.3495006297317, 2509.5637016207775, 1545.981};
     
     Vector currentTime(7);
 
-    SpacecraftECI *system = new SpacecraftECI(
+    SatelliteECEF *system = new SatelliteECEF(
         Constants::Earth::GEOCENTRIC_GRAVITATION_CONSTANT,
         Constants::Earth::ANGULAR_SPEED, 
         initialPosition, initialSpeed
     );
-    RK4Solver solver(system, 10);
+    RK4Solver solver(system, 30);
+
+    std::ofstream trajectoryStream("trajectory.txt");
 
     double step = 30;
     int hour = 3600;
@@ -34,10 +39,9 @@ int main() {
         long long t = i + unixTimestamp;
 
         currentTime = unixToTime(t);
-        Vector ecef = myEci2ecef(x,y,z, currentTime);
         
-        std::cout << state[1] << ' ' << state[3] << ' ' << state[5] << '\n';
-        std::cout << ecef[0] <<" "<< ecef[1] <<" "<< ecef[2] << '\n';
+        trajectoryStream << state[1] << ' ' << state[3] << ' ' << state[5] << '\n';
+
     }
 
     return 0;

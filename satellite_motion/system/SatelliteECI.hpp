@@ -2,19 +2,19 @@
 
 #include "ISystem.hpp"
 
-class SpacecraftECI : public ISystem {
+class SatelliteECI : public ISystem {
 public:
     /// @param mu geocentric gravitational constant 
     /// @param omega earth angular speed
     /// @param initialPosition initial position of SC
     /// @param initialSpeed initial speed of SC
-    SpacecraftECI(double mu, double omega, const Vector& initialPosition, const Vector& initialSpeed);
+    SatelliteECI(double mu, double omega, const Vector& initialPosition, const Vector& initialSpeed);
 
     void f(Vector &state) const;
 
     Vector getInitialState() const;
 
-    ~SpacecraftECI() {};
+    ~SatelliteECI() {};
 private:
     double mu;
     double omega;
