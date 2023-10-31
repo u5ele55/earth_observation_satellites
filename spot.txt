@@ -1,0 +1,5 @@
+Format:
+B L H - geodetic coordinates of observation zone
+
+__Start__
+0 0 0
