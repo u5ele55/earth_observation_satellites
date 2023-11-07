@@ -1,0 +1,13 @@
+satellites.txt: 
+
+in first line integer N - quantity of satellites 
+In next N*4 lines its position, velocity, visibility angle and restrictions of sun inclination:
+
+x y z
+vx vy vz
+visibility_angle
+sun_inclination_restriction
+
+------
+spot.txt:
+B L H - geodetic coordinates of observation zone

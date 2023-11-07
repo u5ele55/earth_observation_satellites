@@ -1,12 +1,10 @@
-Format: 
-
-in first line integer N - quantity of satellites 
-In next N*4 lines its position, velocity, visibility angle and restrictions of sun inclination:
-
-x y z
-vx vy vz
-visibility_angle
-sun_inclination_restriction
-
-__Start__
 2
+6871257.864 0.0 0.0
+0.0 3810.1125727278977 6599.308558521686
+5
+10
+
+3355177.3200000008 4109236.2152793766 4109236.2152793757
+-6707.913751072379 2738.4943214543378 2738.4943214543378
+5
+10

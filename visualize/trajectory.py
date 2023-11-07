@@ -6,7 +6,7 @@ class TrajectoryDrawer:
     def __init__(self, trajectoryFilename, b, a):
         self.fileTrajectory = open(trajectoryFilename, 'r')
         self.drawTrasse = False
-        self.withECI = True
+        self.withECI = False
         self.a = a # MAJOR AXIS
         self.b = b # MINOR AXIS
 
@@ -16,47 +16,44 @@ class TrajectoryDrawer:
 
     def draw(self, ax, inECEF = False, telescopesECEFFile = None):
         data = self.fileTrajectory.read().split('\n')
+        N = int(data[0])
+        trajectoriies = {
+            # id: {
+            #   'eci': {
+            #       'x': [], 'y': [], 'z': [],
+            #   }
+            # }
+        }
         xs,ys,zs = [], [], [] # ECI
         xd,yd,zd = [], [], [] # ECEF
         cnt = 0
+        id = 0
         
-        for c in data[:-1]:
+        for c in data[1:-1]:
             x,y,z = [float(a) for a in c.split()]
-            if not self.withECI or cnt % 2:
-                xd.append(x)
-                yd.append(y)
-                zd.append(z)
-            else:
-                xs.append(x)
-                ys.append(y)
-                zs.append(z)
-            cnt += 1
-        # Scaling
-        to_all = lambda f, ar1, ar2, ar3: f(f(ar1), f(ar2), f(ar3))
-        l = to_all(min, xs, ys, zs)
-        u = to_all(max, xs, ys, zs)
+            id += 1
+            id %= N
+            trajectoriies.setdefault(id, {'eci': {'x': [], 'y': [], 'z': []}})
+            trajectoriies[id]['eci']['x'].append(x)
+            trajectoriies[id]['eci']['y'].append(y)
+            trajectoriies[id]['eci']['z'].append(z)
+        # # Scaling
+        # to_all = lambda f, ar1, ar2, ar3: f(f(ar1), f(ar2), f(ar3))
+        # l = to_all(min, xs, ys, zs)
+        # u = to_all(max, xs, ys, zs)
 
-        ax.set_xlim3d(l, u)
-        ax.set_ylim3d(l, u)
-        ax.set_zlim3d(l, u)
+        # ax.set_xlim3d(l, u)
+        # ax.set_ylim3d(l, u)
+        # ax.set_zlim3d(l, u)
 
 
         #ax.plot(xd, yd, zd, label='SC trajectory ecef', c='#0000FF')
-        if inECEF:
-            # ECI trajectory
-            ax.plot(xd, yd, zd, label='SC trajectory ecef', c='#FF0000')
-            ax.scatter(xd[0], yd[0], zd[0], label='Start', c='#FFFF00')
-            if telescopesECEFFile:
-                ecefTscp = open(telescopesECEFFile, 'r').read().split('\n')
-                N = int(ecefTscp[0])
-
-                for i in range(1,N+1):
-                    X,Y,Z = [float(a) for a in ecefTscp[i][1:-1].split()]
-                    ax.scatter(X, Y, Z, label='', c='#FF00FF')
-        else:
-            # ECI trajectory
-            ax.plot(xs, ys, zs, label='SC trajectory eci', c='#FF0000')
-            ax.scatter(xs[0], ys[0], zs[0], label='Start', c='#FFFF00')
+        
+        # ECI trajectory
+        for id in trajectoriies:
+            data = trajectoriies[id]['eci']    
+            ax.plot(data['x'], data['y'], data['z'], label='SC trajectory eci', c='#FF0000')
+            ax.scatter(data['x'][0], data['y'][0], data['y'][0], label='Start', c='#FFFF00')
 
         # trasse
         if not self.drawTrasse:

@@ -7,40 +7,33 @@
 #include "utils/time.hpp"
 #include "utils/coordinates.hpp"
 
-#include "satellite_motion/modeling/RK4Solver.hpp"
-#include "satellite_motion/system/SatelliteECI.hpp"
-#include "satellite_motion/system/SatelliteECEF.hpp"
+#include "creators/SatelliteGroupCreator.hpp"
+#include "satellite_motion/wrapper/Satellite.hpp"
 
 int main() {
     const double JD = 2460206.383;
-    const double unixTimestamp = (JD - 2440587.5) * Constants::Common::SECONDS_IN_DAY;
-    //ecef - 7144843.808, 217687.110, -506463.296        562.650611, -1616.516697, 7358.157263
-    Vector initialPosition = {2937656.611, 14432705.729, -20838713.022};
-    Vector initialSpeed = {-1356.3495006297317, 2509.5637016207775, 1545.981};
+    const double unixTimestamp = (JD - 2440587.5) * Constants::Earth::SECONDS_IN_DAY;
     
     Vector currentTime(7);
-
-    SatelliteECEF *system = new SatelliteECEF(
-        Constants::Earth::GEOCENTRIC_GRAVITATION_CONSTANT,
-        Constants::Earth::ANGULAR_SPEED, 
-        initialPosition, initialSpeed
-    );
-    RK4Solver solver(system, 30);
-
+    SatelliteGroupCreator creator("../satellites.txt");
+    auto satellites = creator.create();
     std::ofstream trajectoryStream("trajectory.txt");
+    trajectoryStream << satellites.size() << '\n';
 
     double step = 30;
     int hour = 3600;
-
     for (int i = 0; i <= 1 * hour; i += step) {
         double time = i;
-        Vector state = solver.solve(time);
-        double x = state[1], y = state[3], z = state[5];
         long long t = i + unixTimestamp;
-
         currentTime = unixToTime(t);
+
+        for (auto &sat : satellites) {
+            Vector pos = sat->position(time);
+            trajectoryStream << pos[0] << ' ' << pos[1] << ' ' << pos[2] << '\n';
+            Vector ecef = myEci2ecef(pos[0], pos[1], pos[2], currentTime);
+        }
         
-        trajectoryStream << state[1] << ' ' << state[3] << ' ' << state[5] << '\n';
+
 
     }
 

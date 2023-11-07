@@ -25,7 +25,7 @@ Vector unixToTime(long long secs) {
     };
     time[6] = (
         (time[3] * 60 + time[4]) * 60 + time[5]
-        ) / Constants::Common::SECONDS_IN_DAY;
+        ) / Constants::Earth::SECONDS_IN_DAY;
 
     return time;
 }

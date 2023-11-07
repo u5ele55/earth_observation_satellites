@@ -25,7 +25,7 @@ void SatelliteECEF::f(Vector &state) const {
     state[2] = -mu/r3 * y - omega * y;
     state[3] = vy;
 
-    state[4] = -mu/r3 * z - omega * z;
+    state[4] = -mu/r3 * z;
     state[5] = vz;
 }
 
