@@ -13,7 +13,7 @@ Vector unixToTime(long long secs) {
     system_clock::time_point tp{seconds{secs}};
     time_t tt = system_clock::to_time_t(tp);
     tm utc_tm = *gmtime(&tt);
-
+    
     Vector time = {
         (double)utc_tm.tm_year + 1900,
         (double)utc_tm.tm_mon + 1,
@@ -44,6 +44,18 @@ long long dateToUnix(Vector time) {
     std::tm dt2 = *std::gmtime(&t);
 
     return t + 3*60*60;
+}
+
+int dayOfYear(Vector time) {
+    using namespace std::chrono;
+
+    auto secs = dateToUnix(time);
+
+    system_clock::time_point tp{seconds{secs}};
+    time_t tt = system_clock::to_time_t(tp);
+    tm utc_tm = *gmtime(&tt);
+    
+    return utc_tm.tm_yday + 1;
 }
 
 double dateToJd(Vector date)

@@ -27,13 +27,13 @@ int main() {
         long long t = i + unixTimestamp;
         currentTime = unixToTime(t);
 
-        for (auto &sat : satellites) {
+        for (int i = 0; i < satellites.size(); i ++) {
+            auto &sat = satellites[i];
             Vector pos = sat->position(time);
             trajectoryStream << pos[0] << ' ' << pos[1] << ' ' << pos[2] << '\n';
             Vector ecef = myEci2ecef(pos[0], pos[1], pos[2], currentTime);
+            // observation.record(i, ecef)
         }
-        
-
 
     }
 

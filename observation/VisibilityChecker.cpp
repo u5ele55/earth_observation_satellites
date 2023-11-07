@@ -5,8 +5,8 @@
 #include "../utils/coordinates.hpp"
 #include "../utils/constants.hpp"
 
-VisibilityChecker::VisibilityChecker(Vector zoneBLH)
-    : observationECEF(blh2ecef(zoneBLH)) {}
+VisibilityChecker::VisibilityChecker(Vector zoneECEF)
+    : observationECEF(zoneECEF) {}
 
 bool VisibilityChecker::inVisibilityZone(Vector satelliteECEF, double visibilityAngle)
 {

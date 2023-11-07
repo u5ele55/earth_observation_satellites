@@ -5,7 +5,7 @@
 class VisibilityChecker
 {
 public:
-    VisibilityChecker(Vector zoneBLH);
+    VisibilityChecker(Vector zoneECEF);
     bool inVisibilityZone(Vector satelliteECEF, double visibilityAngle);
 private:
     Vector observationECEF;
