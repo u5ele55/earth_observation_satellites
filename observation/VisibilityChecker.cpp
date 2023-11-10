@@ -8,7 +8,7 @@
 VisibilityChecker::VisibilityChecker(Vector zoneECEF)
     : observationECEF(zoneECEF) {}
 
-bool VisibilityChecker::inVisibilityZone(Vector satelliteECEF, double visibilityAngle)
+bool VisibilityChecker::inVisibilityZone(const Vector &satelliteECEF, double visibilityAngle)
 {
     double X = satelliteECEF[0], Y = satelliteECEF[1], Z = satelliteECEF[2];
     double a = Constants::Earth::MAJOR_AXIS, b = Constants::Earth::MINOR_AXIS;
