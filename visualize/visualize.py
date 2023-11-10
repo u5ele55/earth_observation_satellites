@@ -11,7 +11,7 @@ if __name__ == '__main__':
     geoidDr = GeoidDrawer(MINOR_AXIS, MAJOR_AXIS)
 
     geoidDr.draw(ax)
-    #trdr.prepareTrasse()
+    trdr.prepareTrasse()
     inECEF = False
     trdr.draw(ax, inECEF, r"telescopes.txt")
 

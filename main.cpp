@@ -32,6 +32,7 @@ int main() {
             Vector pos = sat->position(time);
             trajectoryStream << pos[0] << ' ' << pos[1] << ' ' << pos[2] << '\n';
             Vector ecef = myEci2ecef(pos[0], pos[1], pos[2], currentTime);
+            trajectoryStream << ecef[0] << ' ' << ecef[1] << ' ' << ecef[2] << '\n';
             // observation.record(i, ecef)
         }
 
