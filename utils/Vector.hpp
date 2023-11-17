@@ -54,6 +54,8 @@ public:
 
     Vector cross(const Vector &other) const;
 
+    double norm() const;
+
     void resize(int newN);
 
     friend std::ostream &operator<<(std::ostream &stream, const Vector &vec);

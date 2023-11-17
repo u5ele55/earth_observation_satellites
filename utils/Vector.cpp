@@ -1,6 +1,7 @@
 #include "Vector.hpp"
 
 #include <stdexcept>
+#include <cmath>
 
 Vector::Vector(int n) : n(n) {
     this->data = new double[n];
@@ -85,6 +86,11 @@ Vector Vector::cross(const Vector &other) const
         az*bx - bz*ax,
         ax*by - bx*ay
     };
+}
+
+double Vector::norm() const
+{
+    return sqrt((*this).dot(*this));
 }
 
 void Vector::resize(int newN){
