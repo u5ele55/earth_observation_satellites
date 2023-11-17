@@ -71,7 +71,8 @@ Vector VisibilityChecker::boundaryPoint(const Vector &unit, double angle, const 
     }
 
     double D = q2*q2 - 4*q1*q3;
-    double k = (-q2 + sqrt(D)) / (2 * q1);
+    // taking minimal root 
+    double k = (-q2 - sqrt(D)) / (2 * q1);
 
     return onCircle + direction * k;
 }
