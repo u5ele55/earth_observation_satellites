@@ -7,7 +7,7 @@ class VisibilityChecker
 public:
     VisibilityChecker(Vector zoneECEF);
     bool inVisibilityZone(const Vector &satelliteECEF, double visibilityAngle);
-    
+    std::vector<Vector> boundaryPoints(int quantity, double visibilityAngle, const Vector &sat);
 private:
     Vector observationECEF;
 private:
