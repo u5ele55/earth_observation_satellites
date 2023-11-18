@@ -10,6 +10,11 @@ Vector Satellite::position(double time)
     return position;
 }
 
+Restrictions Satellite::getRestrictions() const
+{
+    return restrictions;
+}
+
 Satellite::~Satellite()
 {
     delete solver;

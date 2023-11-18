@@ -10,8 +10,9 @@ class TrajectoryDrawer:
         self.a = a # MAJOR AXIS
         self.b = b # MINOR AXIS
 
-    def prepareTrasse(self):
+    def prepareTrasse(self, spotFile):
         self.drawTrasse = True
+        self.spot = [float(a) for a in open(spotFile, 'r').read().split()]
 
     def draw(self, ax, inECEF = False, telescopesECEFFile = None):
         data = self.fileTrajectory.read().split('\n')
@@ -27,15 +28,16 @@ class TrajectoryDrawer:
         id = 0
         
         for c in data[1:-1]:
-            x,y,z = [float(a) for a in c.split()]
+            x,y,z,o = [float(a) for a in c.split()]
             mode = 'eci' if eci else 'ecef'
             
             trajectories.setdefault(id, {})
-            trajectories[id].setdefault(mode, {'x': [], 'y': [], 'z': []})
+            trajectories[id].setdefault(mode, {'x': [], 'y': [], 'z': [], 'visible': []})
             
             trajectories[id][mode]['x'].append(x)
             trajectories[id][mode]['y'].append(y)
             trajectories[id][mode]['z'].append(z)
+            trajectories[id][mode]['visible'].append(int(o))
             eci = not eci
             if eci:
                 id += 1
@@ -69,6 +71,7 @@ class TrajectoryDrawer:
             xd = np.array(trajectories[id]['ecef']['x'])
             yd = np.array(trajectories[id]['ecef']['y'])
             zd = np.array(trajectories[id]['ecef']['z'])
+            visible = np.array(trajectories[id]['ecef']['visible'])
 
             r1 = np.sqrt(xd**2 + yd**2)
             alpha = 1/298.257
@@ -82,11 +85,21 @@ class TrajectoryDrawer:
 
             lmbd *= 180 / np.pi
             phi *= 180 / np.pi
+            
+            hex = list('0123456789ABCDEF')
+            diff = 5
+            not_vis_c_idx = np.random.choice(16 - diff, 6)
+            vis_c_idx = [idx + diff for idx in not_vis_c_idx]
 
-            ax.plot(lmbd, phi)
-            ax.scatter(lmbd[0], phi[0], label=f'start {id}', c="#00FF00")
-            ax.scatter(lmbd[-1], phi[-1], label=f'end {id}', c='#FF0000')
+            not_vis_c = '#' + ''.join([hex[idx] for idx in not_vis_c_idx])
+            vis_c = '#' + ''.join([hex[idx] for idx in vis_c_idx])
+            
+            ax.scatter(lmbd, phi, c=[vis_c if v else not_vis_c for v in visible], s=1)
+            ax.scatter(lmbd[0], phi[0], label=f'start {id}', c=vis_c)
+            ax.scatter(lmbd[-1], phi[-1], label=f'end {id}', c=not_vis_c)
 
-        
+        # set spot
+        ax.scatter(self.spot[1], self.spot[0], label='spot', c="#00FFFF")
+
         ax.legend()
         

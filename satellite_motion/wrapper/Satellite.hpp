@@ -14,6 +14,7 @@ class Satellite {
 public:
     Satellite(Restrictions restrictions, ISystem* system, AbstractSolver* solver);
     Vector position(double time);
+    Restrictions getRestrictions() const;
 
     ~Satellite();
 private:

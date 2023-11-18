@@ -4,8 +4,8 @@
 #include "../satellite_motion/modeling/RK4Solver.hpp"
 #include "../utils/constants.hpp"
 
-SatelliteGroupCreator::SatelliteGroupCreator(const std::string &filename)
-    : file(filename) {}
+SatelliteGroupCreator::SatelliteGroupCreator(const std::string &filename, double step)
+    : file(filename), step(step) {}
 
 std::vector<Satellite*> SatelliteGroupCreator::create()
 {
@@ -20,12 +20,14 @@ std::vector<Satellite*> SatelliteGroupCreator::create()
         file >> initialPosition[0] >> initialPosition[1] >> initialPosition[2];
         file >> initialVelocity[0] >> initialVelocity[1] >> initialVelocity[2];
         file >> restrictions.visibilityAngle >> restrictions.sunInclinationAngle;
+        restrictions.visibilityAngle *= M_PI / 180;
+        restrictions.sunInclinationAngle *= M_PI / 180;
         SatelliteECI *system = new SatelliteECI(
             Constants::Earth::GEOCENTRIC_GRAVITATION_CONSTANT,
             Constants::Earth::ANGULAR_SPEED, 
             initialPosition, initialVelocity
         );
-        RK4Solver *solver = new RK4Solver(system, 30);
+        RK4Solver *solver = new RK4Solver(system, step);
         auto *satellite = new Satellite(restrictions, system, solver);
         res.push_back(satellite);
     }

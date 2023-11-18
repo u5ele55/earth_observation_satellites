@@ -12,13 +12,13 @@
 #include "observation/ObservationController.hpp"
 
 int main() {
-    const double JD = 2460206.383;
+    const double JD = 2460206.583;
     const double unixTimestamp = (JD - 2440587.5) * Constants::Earth::SECONDS_IN_DAY;
     
     Vector currentTime(7);
 
     // Creating satellite group
-    SatelliteGroupCreator creator("../satellites.txt");
+    SatelliteGroupCreator creator("../satellites.txt", 10);
     auto satellites = creator.create();
     std::ofstream trajectoryStream("trajectory.txt");
     trajectoryStream << satellites.size() << '\n';
@@ -32,7 +32,7 @@ int main() {
 
     double step = 30;
     int hour = 3600;
-    for (int i = 0; i <= 1 * hour; i += step) {
+    for (int i = 0; i <= 3 * hour; i += step) {
         double time = i;
         long long t = i + unixTimestamp;
         currentTime = unixToTime(t);
@@ -40,10 +40,11 @@ int main() {
         for (int i = 0; i < satellites.size(); i ++) {
             auto &sat = satellites[i];
             Vector pos = sat->position(time);
-            trajectoryStream << pos[0] << ' ' << pos[1] << ' ' << pos[2] << '\n';
             Vector ecef = myEci2ecef(pos[0], pos[1], pos[2], currentTime);
-            trajectoryStream << ecef[0] << ' ' << ecef[1] << ' ' << ecef[2] << '\n';
-            //observer.observed(ecef);
+            // std::cout << "Sat N. " << i << '\n';
+            char obs = observer.observed(ecef, sat->getRestrictions(), currentTime) ? '1' : '0';
+            trajectoryStream << pos[0] << ' ' << pos[1] << ' ' << pos[2] << ' ' << obs << '\n';
+            trajectoryStream << ecef[0] << ' ' << ecef[1] << ' ' << ecef[2] << ' ' << obs <<'\n'; 
         }
 
     }
