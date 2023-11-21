@@ -15,6 +15,7 @@ if __name__ == '__main__':
     geoidDr.draw(ax)
     testDr.draw(ax)
     trdr.prepareTrasse(r'../spot.txt')
+    trdr.prepareZone(r"zone.txt")
     inECEF = False
     trdr.draw(ax, inECEF, r"telescopes.txt")
 

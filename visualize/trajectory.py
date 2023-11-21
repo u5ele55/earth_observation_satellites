@@ -6,6 +6,7 @@ class TrajectoryDrawer:
     def __init__(self, trajectoryFilename, b, a):
         self.fileTrajectory = open(trajectoryFilename, 'r')
         self.drawTrasse = False
+        self.drawZone = False
         self.withECI = False
         self.a = a # MAJOR AXIS
         self.b = b # MINOR AXIS
@@ -13,6 +14,22 @@ class TrajectoryDrawer:
     def prepareTrasse(self, spotFile):
         self.drawTrasse = True
         self.spot = [float(a) for a in open(spotFile, 'r').read().split()]
+    
+    def prepareZone(self, zoneFile):
+        self.zoneVisibility = {}
+        self.drawZone = True
+        file = open(zoneFile, 'r')
+        N = int(file.readline())
+        for i in range(N):
+            self.zoneVisibility[i] = {'x': [], 'y': [], 'z': []}
+            n = int(file.readline())
+            for j in range(n):
+                line = file.readline()
+                x,y,z = [float(a) for a in line.split()]
+                self.zoneVisibility[i]['x'].append(x)
+                self.zoneVisibility[i]['y'].append(y)
+                self.zoneVisibility[i]['z'].append(z)
+        
 
     def draw(self, ax, inECEF = False, telescopesECEFFile = None):
         data = self.fileTrajectory.read().split('\n')
@@ -58,11 +75,15 @@ class TrajectoryDrawer:
             ax.scatter(data['x'][0], data['y'][0], data['y'][0], label='Start', c='#FFFF00')
 
         # trasse
-        if not self.drawTrasse:
-            return
-
         fig = plt.figure()
         ax = fig.add_subplot()
+        if self.drawTrasse:
+            self.__drawTrasse(trajectories, ax)
+            if self.drawZone:
+                self.__drawZone(ax) 
+        
+
+    def __drawTrasse(self, trajectories, ax):
         img = plt.imread("../visualize/map.jpg")
         plt.imshow(img, extent=[-180, 180, -90, 90])
         ax.set_aspect("auto")
@@ -100,6 +121,21 @@ class TrajectoryDrawer:
 
         # set spot
         ax.scatter(self.spot[1], self.spot[0], label='spot', c="#00FFFF")
-
         ax.legend()
+    
+    def __drawZone(self, ax):
+        for i in self.zoneVisibility:
+            xd = np.array(self.zoneVisibility[i]['x'])
+            yd = np.array(self.zoneVisibility[i]['y'])
+            zd = np.array(self.zoneVisibility[i]['z'])
+            print(self.zoneVisibility)
+            r1 = np.sqrt(xd**2 + yd**2)
+            alpha = 1/298.257
+            phi = np.arcsin(zd / np.sqrt((1-alpha)**2 * r1**2 + zd**2))
+            lmbd = np.arctan2(yd,xd)
+
+            lmbd *= 180 / np.pi
+            phi *= 180 / np.pi
+            ax.scatter(lmbd, phi, s=1)
+
         

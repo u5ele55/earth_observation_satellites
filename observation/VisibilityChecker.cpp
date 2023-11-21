@@ -96,7 +96,7 @@ Vector VisibilityChecker::boundaryPoint(
         q2 += 2 * onCircle[i] * direction[i] / (a[i] * a[i]);
         q3 += pow(onCircle[i] / a[i], 2);
     }
-
+    q3 -= 1;
     double D = q2*q2 - 4*q1*q3;
     // taking minimal root 
     double k = (-q2 - sqrt(D)) / (2 * q1);

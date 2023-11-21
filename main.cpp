@@ -52,7 +52,7 @@ int main() {
         }
     }
 
-    
+    zoneVisibilityStream << satellites.size() << '\n';
     for (int i = 0; i < satellites.size(); i ++) {
         auto &sat = satellites[i];
         Vector pos = sat->position(endtime);
@@ -61,7 +61,8 @@ int main() {
         
         zoneVisibilityStream << boundaries.size() << '\n';
         for(auto& b : boundaries) {
-            zoneVisibilityStream << b[0] << " " << b[1] << " " << b[2] << '\n';
+            Vector ecef = myEci2ecef(b[0], b[1], b[2], currentTime);
+            zoneVisibilityStream << ecef[0] << " " << ecef[1] << " " << ecef[2] << '\n';
         } 
     }
 
