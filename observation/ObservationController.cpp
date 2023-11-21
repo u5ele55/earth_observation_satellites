@@ -28,8 +28,8 @@ bool ObservationController::sunInclinationRestrictionSatisfied(const Vector &zon
 
 bool ObservationController::observed(const Vector &satelliteECEF, const Restrictions &restrictions, const Vector &currentTime)
 {
-    if (!sunInclinationRestrictionSatisfied(zoneBLH, restrictions.sunInclinationAngle, currentTime))
-        return false;
+    //if (!sunInclinationRestrictionSatisfied(zoneBLH, restrictions.sunInclinationAngle, currentTime))
+    //    return false;
     
     return visibilityChecker.inVisibilityZone(satelliteECEF, restrictions.visibilityAngle);
 }

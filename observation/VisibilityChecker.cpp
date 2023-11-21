@@ -7,18 +7,30 @@
 #include "../utils/coordinates.hpp"
 #include "../utils/constants.hpp"
 #include "../utils/LinAlg.hpp"
+
+// DELETE
     std::ofstream testStream("test.txt");
+
 VisibilityChecker::VisibilityChecker(Vector zoneECEF)
     : observationECEF(zoneECEF) {}
 
 bool VisibilityChecker::inVisibilityZone(const Vector &satelliteECEF, double visibilityAngle)
 {
     Vector projOnEllipse = projectionOnEllipse(satelliteECEF);
-    Vector r = observationECEF - projOnEllipse;
-
+    Vector r = observationECEF - satelliteECEF;
     double radius = visibilityRadius(satelliteECEF, visibilityAngle, projOnEllipse);
+    // get projection onto plane that's tangent to projection
+    Vector zoneProjection = observationECEF * (projOnEllipse.dot(projOnEllipse) / projOnEllipse.dot(observationECEF));
+    
+    // use it as a direction for boundary point
+    Vector onCircle = onCircleByDirection(projOnEllipse, zoneProjection, radius);
 
-    return r.dot(r) <= radius * radius;
+    // continue it until it touches earth
+    Vector bound = boundaryPoint(onCircle, 0, satelliteECEF, projOnEllipse);
+    double maxDistSqr = (bound - satelliteECEF).dot(bound - satelliteECEF);
+    std::cout << bound - satelliteECEF << ": " << sqrt(maxDistSqr) << "; r: " << r << ' ' << r.norm() << '\n';
+
+    return r.dot(r) <= maxDistSqr;
 }
 
 std::vector<Vector> VisibilityChecker::boundaryPoints(int quantity, double visibilityAngle, const Vector &sat)
@@ -32,10 +44,6 @@ std::vector<Vector> VisibilityChecker::boundaryPoints(int quantity, double visib
     testStream << proj << '\n';
     testStream << quantity << '\n';
     testStream << unit << '\n';
-
-    // put plane tangent to ellipsoid, take random point on it
-    // => difference of this point and proj is direction to look for unit
-    // unit = t * r, where t = sqrt(radius**2 / r**2)
 
     for (int i = 0; i < quantity; i ++) {
         res.push_back(boundaryPoint(unit, angle * i, sat, proj));
@@ -65,6 +73,9 @@ double VisibilityChecker::visibilityRadius(const Vector &satelliteECEF, double v
 
 Vector VisibilityChecker::getOnCircle(const Vector &proj, double radius)
 {
+    // put plane tangent to ellipsoid, take random point on it
+    // => difference of this point and proj is direction to look for unit
+    // unit = t * r, where t = sqrt(radius**2 / r**2)
     double X0 = proj[0], Y0 = proj[1], Z0 = proj[2];
     double x = X0, y = Y0;
     if (X0 > Y0)
@@ -73,6 +84,11 @@ Vector VisibilityChecker::getOnCircle(const Vector &proj, double radius)
         x += 5*pow(10, 5);
     Vector onPlane = {x, y, Z0 - 1/Z0 * (X0*(x - X0) + Y0*(y - Y0))};
     testStream << onPlane << '\n';
+
+    return onCircleByDirection(proj, onPlane, radius);
+}
+
+Vector VisibilityChecker::onCircleByDirection(const Vector &proj, const Vector &onPlane, double radius) {
     Vector diff = onPlane - proj;
 
     double k = radius / diff.norm();

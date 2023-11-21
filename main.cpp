@@ -12,7 +12,7 @@
 #include "observation/ObservationController.hpp"
 
 int main() {
-    const double JD = 2460206.683;
+    const double JD = 2460206.369;
     const double unixTimestamp = (JD - 2440587.5) * Constants::Earth::SECONDS_IN_DAY;
     
     Vector currentTime(7);
@@ -35,8 +35,8 @@ int main() {
     
     double step = 30;
     int hour = 3600;
-    int endtime = 3.2 * hour;
-    for (int i = 0; i <= endtime; i += step) {
+    int endtime = 2 * hour;
+    for (int i = 1.5 * hour; i <= endtime; i += step) {
         double time = i;
         long long t = i + unixTimestamp;
         currentTime = unixToTime(t);
@@ -57,7 +57,7 @@ int main() {
         auto &sat = satellites[i];
         Vector pos = sat->position(endtime);
         auto boundaries = visibilityChecker.boundaryPoints(
-            10, sat->getRestrictions().visibilityAngle, pos);
+            24, sat->getRestrictions().visibilityAngle, pos);
         
         zoneVisibilityStream << boundaries.size() << '\n';
         for(auto& b : boundaries) {

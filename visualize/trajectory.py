@@ -107,7 +107,7 @@ class TrajectoryDrawer:
             phi *= 180 / np.pi
             
             hex = list('0123456789ABCDEF')
-            diff = 5
+            diff = 7
             not_vis_c_idx = np.random.choice(16 - diff, 6)
             vis_c_idx = [idx + diff for idx in not_vis_c_idx]
 
@@ -120,7 +120,7 @@ class TrajectoryDrawer:
 
         # set spot
         ax.scatter(self.spot[1], self.spot[0], label='spot', c="#00FFFF")
-        ax.legend()
+        # ax.legend()
     
     def __drawZone(self, ax):
         for i in self.zoneVisibility:
@@ -132,8 +132,12 @@ class TrajectoryDrawer:
             phi = np.arcsin(zd / np.sqrt((1-alpha)**2 * r1**2 + zd**2))
             lmbd = np.arctan2(yd,xd)
 
+            for i in range(len(lmbd)-1): 
+                if abs(lmbd[i] - lmbd[i+1]) > np.pi:
+                    lmbd[i] = np.nan
+
             lmbd *= 180 / np.pi
             phi *= 180 / np.pi
-            ax.scatter(lmbd, phi, s=1)
+            plt.fill(lmbd, phi, edgecolor='r', fill=False)
 
         
