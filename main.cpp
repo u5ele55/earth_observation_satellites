@@ -27,6 +27,7 @@ int main() {
     std::ifstream spot("../spot.txt");
     Vector zoneBLH(3);
     spot >> zoneBLH[0] >> zoneBLH[1] >> zoneBLH[2];
+    zoneBLH = zoneBLH * (M_PI / 180);
 
     std::ofstream zoneVisibilityStream("zone.txt");
 
@@ -35,8 +36,8 @@ int main() {
     
     double step = 30;
     int hour = 3600;
-    int endtime = 2 * hour;
-    for (int i = 1.5 * hour; i <= endtime; i += step) {
+    int endtime = 3 * hour;
+    for (int i = hour; i <= endtime; i += step) {
         double time = i;
         long long t = i + unixTimestamp;
         currentTime = unixToTime(t);

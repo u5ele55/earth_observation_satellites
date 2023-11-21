@@ -139,5 +139,4 @@ class TrajectoryDrawer:
             lmbd *= 180 / np.pi
             phi *= 180 / np.pi
             plt.fill(lmbd, phi, edgecolor='r', fill=False)
-
         

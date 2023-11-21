@@ -29,7 +29,7 @@ std::vector<Satellite*> SatelliteGroupCreator::create()
         );
         RK4Solver *solver = new RK4Solver(system, step);
         auto *satellite = new Satellite(restrictions, system, solver);
-        if(i == N-1) res.push_back(satellite);
+        res.push_back(satellite);
     }
 
     return res;

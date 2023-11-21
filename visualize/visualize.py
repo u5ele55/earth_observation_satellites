@@ -1,7 +1,8 @@
 from trajectory import *
 from geoid import GeoidDrawer
 from designations import DesignationsDrawer
-from test import TestDrawer
+# from test import TestDrawer
+from test2 import TestDrawer
 
 MAJOR_AXIS = 6378137; 
 MINOR_AXIS = 6356752.3142; 

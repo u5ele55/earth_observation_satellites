@@ -9,7 +9,7 @@
 #include "../utils/LinAlg.hpp"
 
 // DELETE
-    std::ofstream testStream("test.txt");
+    // std::ofstream testStream("test.txt");
 
 VisibilityChecker::VisibilityChecker(Vector zoneECEF)
     : observationECEF(zoneECEF) {}
@@ -27,8 +27,8 @@ bool VisibilityChecker::inVisibilityZone(const Vector &satelliteECEF, double vis
 
     // continue it until it touches earth
     Vector bound = boundaryPoint(onCircle, 0, satelliteECEF, projOnEllipse);
+    // testStream << bound << '\n';
     double maxDistSqr = (bound - satelliteECEF).dot(bound - satelliteECEF);
-    std::cout << bound - satelliteECEF << ": " << sqrt(maxDistSqr) << "; r: " << r << ' ' << r.norm() << '\n';
 
     return r.dot(r) <= maxDistSqr;
 }
@@ -41,9 +41,9 @@ std::vector<Vector> VisibilityChecker::boundaryPoints(int quantity, double visib
     Vector proj = projectionOnEllipse(sat);
     double radius = visibilityRadius(sat, visibilityAngle, proj);
     Vector unit = getOnCircle(proj, radius);
-    testStream << proj << '\n';
-    testStream << quantity << '\n';
-    testStream << unit << '\n';
+    // testStream << proj << '\n';
+    // testStream << quantity << '\n';
+    // testStream << unit << '\n';
 
     for (int i = 0; i < quantity; i ++) {
         res.push_back(boundaryPoint(unit, angle * i, sat, proj));
@@ -83,7 +83,7 @@ Vector VisibilityChecker::getOnCircle(const Vector &proj, double radius)
     else 
         x += 5*pow(10, 5);
     Vector onPlane = {x, y, Z0 - 1/Z0 * (X0*(x - X0) + Y0*(y - Y0))};
-    testStream << onPlane << '\n';
+    // testStream << onPlane << '\n';
 
     return onCircleByDirection(proj, onPlane, radius);
 }
@@ -100,7 +100,7 @@ Vector VisibilityChecker::boundaryPoint(
     const Vector &unit, double angle, const Vector &sat, const Vector &projection)
 {
     Vector onCircle = LinAlg::rotateAbout(unit, projection, angle);
-    testStream << onCircle << '\n';
+    // testStream << onCircle << '\n';
     Vector direction = onCircle - sat;
     Vector a = {
         Constants::Earth::MAJOR_AXIS, Constants::Earth::MAJOR_AXIS, Constants::Earth::MINOR_AXIS
