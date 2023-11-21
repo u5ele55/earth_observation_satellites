@@ -78,25 +78,6 @@ Vector VisibilityChecker::getOnCircle(const Vector &proj, double radius)
     double k = radius / diff.norm();
 
     return proj + diff * k;
-    // calculate z(x,y) s.t. (x,y,z) belongs to the plane and in a circle
-    // set x and y as t as we need any such point
-
-    if (Z0 == 0) {
-        return {};
-    }
-
-    double a = 2 + pow((X0+Y0)/Z0, 2);
-    double b = -2 * (X0+Y0 + (X0+Y0)/pow(Z0,2));
-    double c = (1 + 1/pow(Z0, 2)) * (X0*X0 + Y0*Y0);
-
-    double D = b*b - 4*a*c;
-    std::cout << "D " << D << '\n'; 
-
-    double t = (-b + sqrt(D)) / (2*a);
-    
-    double z = Z0 + 1/Z0 * (X0*(t-X0) + Y0*(t-Y0));
-
-    return {t,t,z};
 }
 
 Vector VisibilityChecker::boundaryPoint(
