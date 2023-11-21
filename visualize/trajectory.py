@@ -72,8 +72,7 @@ class TrajectoryDrawer:
         for id in trajectories:
             data = trajectories[id]['eci']    
             ax.plot(data['x'], data['y'], data['z'], label='SC trajectory eci', c='#FF0000')
-            ax.scatter(data['x'][0], data['y'][0], data['y'][0], label='Start', c='#FFFF00')
-
+            ax.scatter(data['x'][0], data['y'][0], data['z'][0], label='Start', c='#FFFF00')
         # trasse
         fig = plt.figure()
         ax = fig.add_subplot()
@@ -128,7 +127,6 @@ class TrajectoryDrawer:
             xd = np.array(self.zoneVisibility[i]['x'])
             yd = np.array(self.zoneVisibility[i]['y'])
             zd = np.array(self.zoneVisibility[i]['z'])
-            print(self.zoneVisibility)
             r1 = np.sqrt(xd**2 + yd**2)
             alpha = 1/298.257
             phi = np.arcsin(zd / np.sqrt((1-alpha)**2 * r1**2 + zd**2))
