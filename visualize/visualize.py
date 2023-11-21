@@ -13,7 +13,7 @@ if __name__ == '__main__':
     testDr = TestDrawer(r"test.txt")
 
     geoidDr.draw(ax)
-    testDr.draw(ax)
+    #testDr.draw(ax)
     trdr.prepareTrasse(r'../spot.txt')
     trdr.prepareZone(r"zone.txt")
     inECEF = False

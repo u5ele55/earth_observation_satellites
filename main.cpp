@@ -12,7 +12,7 @@
 #include "observation/ObservationController.hpp"
 
 int main() {
-    const double JD = 2460206.583;
+    const double JD = 2460206.683;
     const double unixTimestamp = (JD - 2440587.5) * Constants::Earth::SECONDS_IN_DAY;
     
     Vector currentTime(7);
@@ -35,7 +35,7 @@ int main() {
     
     double step = 30;
     int hour = 3600;
-    int endtime = 3 * hour;
+    int endtime = 3.2 * hour;
     for (int i = 0; i <= endtime; i += step) {
         double time = i;
         long long t = i + unixTimestamp;
