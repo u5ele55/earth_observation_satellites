@@ -57,7 +57,7 @@ int main() {
         auto &sat = satellites[i];
         Vector pos = sat->position(endtime);
         auto boundaries = visibilityChecker.boundaryPoints(
-            24, sat->getRestrictions().visibilityAngle, pos);
+            10, sat->getRestrictions().visibilityAngle, pos);
         
         zoneVisibilityStream << boundaries.size() << '\n';
         for(auto& b : boundaries) {
