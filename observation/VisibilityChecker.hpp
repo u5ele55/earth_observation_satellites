@@ -14,5 +14,6 @@ private:
     Vector projectionOnEllipse(const Vector &satelliteECEF);
     double visibilityRadius(const Vector &satelliteECEF, double visibilityAngle, const Vector &projOnEl);
 
+    Vector getOnCircle(const Vector &proj, double radius);
     Vector boundaryPoint(const Vector &unit, double angle, const Vector &sat, const Vector &projection);
 };

@@ -28,11 +28,15 @@ int main() {
     Vector zoneBLH(3);
     spot >> zoneBLH[0] >> zoneBLH[1] >> zoneBLH[2];
 
-    ObservationController observer(zoneBLH);
+    std::ofstream zoneVisibilityStream("zone.txt");
 
+    VisibilityChecker visibilityChecker(blh2ecef(zoneBLH));
+    ObservationController observer(zoneBLH, visibilityChecker);
+    
     double step = 30;
     int hour = 3600;
-    for (int i = 0; i <= 3 * hour; i += step) {
+    int endtime = 3 * hour;
+    for (int i = 0; i <= endtime; i += step) {
         double time = i;
         long long t = i + unixTimestamp;
         currentTime = unixToTime(t);
@@ -46,7 +50,19 @@ int main() {
             trajectoryStream << pos[0] << ' ' << pos[1] << ' ' << pos[2] << ' ' << obs << '\n';
             trajectoryStream << ecef[0] << ' ' << ecef[1] << ' ' << ecef[2] << ' ' << obs <<'\n'; 
         }
+    }
 
+    
+    for (int i = 0; i < satellites.size(); i ++) {
+        auto &sat = satellites[i];
+        Vector pos = sat->position(endtime);
+        auto boundaries = visibilityChecker.boundaryPoints(
+            24, sat->getRestrictions().visibilityAngle, pos);
+        
+        zoneVisibilityStream << boundaries.size() << '\n';
+        for(auto& b : boundaries) {
+            zoneVisibilityStream << b[0] << " " << b[1] << " " << b[2] << '\n';
+        } 
     }
 
     return 0;

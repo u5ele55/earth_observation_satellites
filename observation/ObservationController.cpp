@@ -5,8 +5,8 @@
 
 #include "../utils/time.hpp"
 
-ObservationController::ObservationController(Vector zoneBLH)
-    : zoneBLH(zoneBLH), zoneECEF(blh2ecef(zoneBLH)), visibilityChecker(zoneECEF) {}
+ObservationController::ObservationController(Vector zoneBLH, VisibilityChecker &visibilityChecker)
+    : zoneBLH(zoneBLH), zoneECEF(blh2ecef(zoneBLH)), visibilityChecker(visibilityChecker) {}
 
 bool ObservationController::sunInclinationRestrictionSatisfied(const Vector &zoneBLH, double sunInclinationRestriction, const Vector &currentTime)
 {
