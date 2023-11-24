@@ -1,6 +1,5 @@
 from trajectory import *
 from geoid import GeoidDrawer
-from designations import DesignationsDrawer
 # from test import TestDrawer
 from test2 import TestDrawer
 
